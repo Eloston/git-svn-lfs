@@ -13,7 +13,7 @@ if ! git config svn-remote.svn.fetch > /dev/null; then
 fi
 git config user.email 'user@company.com'
 git config user.name Name
-git config svn.brokenSymlinkWorkaround false
+git config svn.brokenSymlinkWorkaround false
 # Background garbage collection can break git-lfs-migrate which runs almost immediately after git-svn fetch.
 git config --bool gc.autoDetach false
 git lfs install
