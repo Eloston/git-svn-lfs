@@ -75,7 +75,6 @@ def parse_git(commit_hash, expected_branch, expected_uuid):
     """
     Returns a tuple containing the revision number and corresponding hash for
     the entire branch given by commit_hash. Uses "git log" to get the info.
-    The list
 
     Aborts if expected_branch and expected_uuid don't match the git log.
     """
@@ -104,19 +103,16 @@ def parse_git(commit_hash, expected_branch, expected_uuid):
             if match:
                 branch_name, revision, branch_uuid = match.groups()
                 revision = int(revision)
-                if branch_name != expected_branch:
-                    raise ValueError(
-                        'Branch name "{}" does not match expected "{}"'.format(
-                            branch_name, expected_branch))
-                if branch_uuid != expected_uuid:
-                    raise ValueError(
-                        'UUID "{}" does not match expected "{}"'.format(branch_uuid, expected_uuid))
-                if entries and revision >= entries[-1][0]:
-                    raise ValueError(
-                        ('Revision {} for hash {} should be lower than '
-                         'revision {} for hash {}').format(
-                             revision, current_hash, *entries[-1]))
-                entries.append((revision, current_hash))
+                if branch_name == expected_branch:
+                    if branch_uuid != expected_uuid:
+                        raise ValueError(
+                            'UUID "{}" does not match expected "{}"'.format(branch_uuid, expected_uuid))
+                    if entries and revision >= entries[-1][0]:
+                        raise ValueError(
+                            ('Revision {} for hash {} should be lower than '
+                             'revision {} for hash {}').format(
+                                 revision, current_hash, *entries[-1]))
+                    entries.append((revision, current_hash))
                 current_hash = None
         else:
             raise ValueError(
