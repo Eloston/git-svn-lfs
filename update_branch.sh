@@ -2,15 +2,24 @@
 
 set -eux
 
+# Updates (and can also initialize) the specified SVN branch in the git repo
+
 # NOTE: This script will not resolve any discrepancies between the local git repo and the one on GitHub.
 
 export TARGET_BR=${TARGET_BR:-$1}
+
+git config svn-remote.$1.url svn+ssh://YOUR_SVN_REPO_ROOT_HERE/branches/$1
+git config svn-remote.$1.fetch ":refs/remotes/svn/$1"
 
 # Update pseudo "svn" remote with new SVN changes
 git svn fetch -A ../authors.txt --log-window-size=5000 $1
 
 # Update local branch with new SVN changes from pseudo "svn" remote
-git checkout $TARGET_BR
+if git rev-parse --verify $TARGET_BR; then
+	git checkout $TARGET_BR
+else
+	git checkout -b $TARGET_BR --track svn/$1
+fi
 git merge --ff-only svn/$1
 
 git lfs track '*.gz' '*.xz' '*.rdf'

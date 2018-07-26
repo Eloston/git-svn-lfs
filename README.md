@@ -4,9 +4,9 @@ This repo contains the tools for migrating Company SVN repos to git and GitHub.
 
 ## First time migration
 
-Run `setup.sh` from a directory to contain the git repository.
+Run `update_all.sh` from a directory to contain the git repository.
 
-**NOTE**: If `git svn init` fails due to a missing function in a shared object, run setup.sh after entering the shell created by running `ssh-agent bash`
+**NOTE**: If `git svn init` fails due to a missing function in a shared object, run update_all.sh after entering the shell created by running `ssh-agent bash`
 
 ## Associate with GitHub
 
