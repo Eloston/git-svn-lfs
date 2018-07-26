@@ -89,7 +89,9 @@ def parse_git(commit_hash, expected_branch, expected_uuid):
     raw_log = get_stdout('git', 'log', '--pretty={}%H%n%B'.format(magic_prefix), commit_hash)
     for line in raw_log.splitlines():
         line = line.strip()
-        if line.startswith(magic_prefix):
+        if not line:
+            continue # Ignore blank lines
+        elif line.startswith(magic_prefix):
             if current_hash:
                 raise ValueError('Could not find git-svn-id line for hash: {}'.format(current_hash))
             else:
@@ -119,7 +121,9 @@ def parse_git(commit_hash, expected_branch, expected_uuid):
         else:
             raise ValueError(
                 ('git log parser has no current_hash and '
-                 'did not find magic prefix for line: {}').format(line))
+                 'did not find magic prefix for line "{}"').format(line))
+    if not entries:
+        raise ValueError('Could not find any entries from git log. Content: {}'.format(raw_log))
     entries.reverse()
     return entries
 
@@ -143,7 +147,7 @@ def verify_revmap_git_consistency(revmap_entries, git_entries):
 def main():
     """CLI entrypoint"""
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('branch', help='The branch for the corresponding revmap that will be modified')
+    parser.add_argument('branch', help='The git-svn branch name for the corresponding revmap that will be modified')
     parser.add_argument('new_hash', help='The commit hash of the new post-LFS branch to use')
     args = parser.parse_args()
 
