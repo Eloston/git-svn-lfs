@@ -1,45 +1,19 @@
 # SVN to git migration tools
 
-This repo contains the tools for migrating Company SVN repos to git and GitHub.
+**I am not maintaining this code**. If you want to submit PRs or fork this code, feel free to do so. I will not implement feature requests.
 
-## First time migration
+This repo contains the tools for migrating any SVN repo to git (it was assumed GitHub, but any LFS-capable server will work).
+
+The latest status of the code for incremental svn updates in git is in commit `Final attempt at updating git with new svn changes` (hash `83b6b8e14da3a9eea7b19d2c9512b7235662765d`).
+
+## Usage
 
 Run `update_all.sh` from a directory to contain the git repository.
 
 **NOTE**: If `git svn init` fails due to a missing function in a shared object, run update_all.sh after entering the shell created by running `ssh-agent bash`
 
-## Associate with GitHub
+`update_all.sh` will always assume that it is re-exporting the repository from scratch. It was supposed to also support incremental updates in commit `83b6b8e14da3a9eea7b19d2c9512b7235662765d`.
 
-First, add a remote for GitHub:
+## License
 
-```sh
-git remote add github git@github.com:company/git_repo.git
-```
-
-Then, temporarily change user.name and user.email to the proper settings for your GitHub account so git will properly authenticate during pushing.
-
-Finally, push to GitHub:
-
-```sh
-git push github --all
-```
-
-## Update GitHub with new SVN changes
-
-To update a branch like `branch_8`, run the following from inside the git repo used for SVN migration:
-
-```sh
-update_branch.sh branch_8
-```
-
-To update the branch `master` (currently `branch_trunk` in SVN), use the following commands instead:
-
-```sh
-TARGET_BR=master update_branch.sh branch_trunk
-```
-
-Finally, push all updated branches and tags to GitHub:
-
-```sh
-git push --all github
-```
+Public domain. This code is too small and too hacky to be worth being credited for.
