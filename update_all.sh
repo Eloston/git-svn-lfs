@@ -4,8 +4,13 @@ set -eux
 
 # Update (and also initialize) the git repo with major SVN branches
 
-if [ ! -f '../authors.txt' ]; then
+if [ ! -s '../authors.txt' ]; then
 	svn log -q svn+ssh://YOUR_SVN_REPO_ROOT_HERE | awk -F '|' '/^r/ {sub("^ ", "", $2); sub(" $", "", $2); print $2" = "$2" <"$2">"}' | sort -u > ../authors.txt
+fi
+
+if [ ! -s '../authors.txt' ]; then
+	echo 'ERROR: Failed to download authors.txt'
+	exit 1
 fi
 
 if ! git config svn-remote.svn.fetch > /dev/null; then
